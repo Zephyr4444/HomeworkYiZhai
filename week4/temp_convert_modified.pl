@@ -39,3 +39,5 @@ exit;
 
 
 ############################################################
+#use perl temp_convert_modified.pl -c30 > temp_out.txt
+#use perl temp_convert_modified.pl -F60 >> temp_out.txt

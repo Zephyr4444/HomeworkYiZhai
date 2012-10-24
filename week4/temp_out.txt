@@ -1,2 +1,2 @@
 86 f
-15.56 c
+Usage: temp_convert_modified.pl -[c|f]num
