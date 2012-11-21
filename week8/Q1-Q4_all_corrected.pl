@@ -14,7 +14,6 @@ while(<$file>)
 {
  chomp $_;
  next if (substr($_,0,1) eq '>');
- next if /.*N.*/;
 
 #Q1 trim the adapter and get the clean reads
  my $pos = -1; my $len = 0;
@@ -26,6 +25,8 @@ while(<$file>)
   }
 if($len > -1)
  {  $trimmed_seq = substr($_, 0, $len); }
+
+next if $trimmed_seq =~ /.*N.*/;
  
 next if (length($trimmed_seq) < 18 );
 
@@ -95,27 +96,42 @@ open (my $out2 => 'unique.txt') || die $!;
 
 my %hash_ma;
 my %hash2;
+
 while(<$out1>)
  { 
- chomp($_);
- if(/(^>.*\n)/) 
-   {
-    $tem = $1; #store the ID
-    next;
+ 	
+ 	if(/(^>.*\n)/) 
+    {
+    	$tem = $1; #store the ID
+    	next;
+    	
     }
- $hash_ma{$_} = $tem;
- }        #foreach my $keyma(keys %hash_ma){print $keyma,"\t",$hash_ma{$keyma};}
+ 	chomp($tem);
+	chomp($_);
+	#print $tem,"\n";
+ 	$hash_ma{$_} = $tem;
+ }        
+ #foreach my $keyma(keys %hash_ma){print $keyma,"\n",$hash_ma{$keyma},"\n";}
 
+
+
+open (my $out3 => '>new.txt') || die $!;
 foreach my $key1(keys %hash) #compare sequence in unique.txt with mature.fa
  {
- if ( exit ($hash_ma{$key1}) )
+ if ( exists ($hash_ma{$key1}) )
    {
    $hash2{$hash_ma{$key1}} = $hash{$key1};
+   print $out3 $hash_ma{$key1},"\t",$hash{$key1},"\n";
+       #print $key1,"\t",$hash_ma{$key1},"\t",$hash{$key1},"\t",$hash2{$hash_ma{$key1}},"\n";
    }
  }
-open (my $out3 => 'new.txt') || die $!;
-foreach my $key2(keys %hash2)
- {
-  print $out3 $key2,"\t",$hash2{$key2},"\n";
- }
+
+# foreach my $key2(keys %hash2)
+#{print $key2,"\t",$hash2{$key2},"\n";}
+
+#open (my $out3 => '>new.txt') || die $!;
+#foreach my $key2(keys %hash2)
+ #{
+  #print $out3 $key2,"\t",$hash2{$key2},"\n";
+ #}
 
