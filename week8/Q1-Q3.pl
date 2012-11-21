@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# week5 Q1&Q2 
+# week8 Q1&Q2&Q3 
 use strict;
 
 my $adapter = "CTGTAGGCACCATCAAT";
@@ -15,8 +15,10 @@ while(<$file>)
  chomp $_;
  next if (substr($_,0,1) eq '>');
  next if /.*N.*/;
+
 #Q1 trim the adapter and get the clean reads
  my $pos = -1; my $len = 0;
+ 
  while(($pos = index($_, $adapter_first6, $pos)) > -1)
   {
     $len = $pos;
@@ -51,11 +53,11 @@ if (exists ($hash{$trimmed_seq}))
 
 }
 
-my $unique_len = scalar ($hash{$trimmed_seq});
+my $unique_len = scalar (keys %hash);
 
 print "The number of the clean reads is ",$clean_num,"\n";
-print "The number of the unique reads is",$unique_len,"\n";
-=cut
+print "The number of the unique reads is ",$unique_len,"\n";
+
 open(my $outfh => '>distribution.txt') || die $!;
 foreach my $key(keys %le)
 {print $outfh $key,"\t",$le{$key},"\n";}
